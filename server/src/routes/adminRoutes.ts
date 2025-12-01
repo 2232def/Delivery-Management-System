@@ -6,7 +6,7 @@ import {
     associateBuyer, 
     getOrderDetails 
 } from '../controllers/adminController';
-import { authenticateUser, attachLocalUser, verifyAdmin } from '../middleware/authMiddleware';
+import { enforceSignIn, attachLocalUser, verifyAdmin } from '../middleware/authMiddleware';
 
 // Middleware to check if user is Admin (You should implement this)
 // import { verifyAdmin } from '../middleware/auth'; 
@@ -16,7 +16,7 @@ type ExpressMiddleware = (req: Request, res: Response, next: NextFunction) => vo
 const router = Router();
 
 const authChain: ExpressMiddleware[] = [
-    authenticateUser as unknown as ExpressMiddleware,
+    enforceSignIn as unknown as ExpressMiddleware,
     attachLocalUser as ExpressMiddleware,
     verifyAdmin as ExpressMiddleware
 ];

@@ -16,9 +16,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon --quiet server",
+    "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.1.11"
+  },
   "dependencies": {
-    "@clerk/clerk-sdk-node": "^4.13.23"
+    "@clerk/express": "^1.7.53"
   }
 }

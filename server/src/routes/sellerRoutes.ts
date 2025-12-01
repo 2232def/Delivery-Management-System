@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { deleteOrder, getAssignedOrders, updateOrderStage } from '../controllers/sellerController';
-import { attachLocalUser, authenticateUser, verifySeller } from '../middleware/authMiddleware';
+import { attachLocalUser, enforceSignIn, verifySeller } from '../middleware/authMiddleware';
 
 
 const router = Router();
@@ -9,7 +9,7 @@ type ExpressMiddleware = (req: Request, res: Response, next: NextFunction) => vo
 
 // Auth Chain: Verify Token -> Attach DB User -> Verify SELLER Role
 const authChain: ExpressMiddleware[] = [
-    authenticateUser as unknown as ExpressMiddleware,
+    enforceSignIn as unknown as ExpressMiddleware,
     attachLocalUser as ExpressMiddleware,
     verifySeller as ExpressMiddleware
 ];

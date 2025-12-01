@@ -4,14 +4,14 @@ import {
     getActiveOrder,
     getOrderHistory
 } from '../controllers/buyerController';
-import { authenticateUser, attachLocalUser, verifyBuyer } from '../middleware/authMiddleware';
+import { enforceSignIn, attachLocalUser, verifyBuyer } from '../middleware/authMiddleware';
 
 type ExpressMiddleware = (req: Request, res: Response, next: NextFunction) => void;
 
 const router = Router();
 
 const authChain: ExpressMiddleware[] = [
-    authenticateUser as unknown as ExpressMiddleware,
+    enforceSignIn as unknown as ExpressMiddleware,
     attachLocalUser as ExpressMiddleware,
     verifyBuyer as ExpressMiddleware
 ];

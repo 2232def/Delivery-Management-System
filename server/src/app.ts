@@ -1,13 +1,19 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
 import http from "http";
-import { Server } from "socket.io";
 import dotenv from "dotenv";
 import cors from "cors";
-import connectDB from "./config/db";
+import { clerkMiddleware } from '@clerk/express';
+
+// --- Imports from your Config files ---
+import connectDB from "./config/db"; 
+import { initSocket } from "./config/socketConfig";
+
+// --- Route Imports ---
 import exampleRoutes from "./routes/exampleRoutes";
 import adminRoutes from "./routes/adminRoutes";
 import buyerRoutes from "./routes/buyerRoutes";
 import sellerRoutes from "./routes/sellerRoutes";
+import authRoutes from "./routes/authRoutes"; // Don't forget this one!
 
 // Load env vars
 dotenv.config();
@@ -16,36 +22,39 @@ dotenv.config();
 connectDB();
 
 const app: Application = express();
+// Create the HTTP server
 const server = http.createServer(app);
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// Clerk Global Middleware
+app.use(clerkMiddleware()); 
+
+// Register Routes
+app.use("/api/auth", authRoutes);      // For Syncing Users
+app.use("/api/v1", adminRoutes);       // Admin
+app.use("/api/v1", buyerRoutes);       // Buyer
+app.use("/api/v1", sellerRoutes);      // Seller
 app.use("/api/example", exampleRoutes);
-app.use("/api/v1", adminRoutes);
-app.use("/api/v1", buyerRoutes);
-app.use("/api/v1", sellerRoutes);
 
-// Socket.io setup
-const io = new Server(server, {
-  cors: {
-    origin: "*", // Allow all origins for now, configure for production
-    methods: ["GET", "POST"],
-  },
+// Global Error Handler (for Clerk)
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    if (err.clerkError) {
+        console.error("Clerk Error:", err.message);
+        return res.status(401).json({ error: "Authentication Failed" });
+    }
+    next(err);
 });
 
-io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id);
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
-});
+// --- CRITICAL FIX: Initialize Socket.io using your Config ---
+// This ensures that 'getIO()' inside your controllers works correctly.
+initSocket(server); 
 
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📡 Socket.io initialized`);
 });
