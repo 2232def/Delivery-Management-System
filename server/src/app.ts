@@ -27,7 +27,7 @@ const server = http.createServer(app);
 
 // Middleware
 app.use(cors({
-    origin: 'https://delivery-management-system-steel.vercel.app/login', // Adjust to your client URL
+    origin: 'https://delivery-management-system-steel.vercel.app/', // Adjust to your client URL
     credentials: true
 }));
 app.use(express.json());
