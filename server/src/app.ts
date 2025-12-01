@@ -28,24 +28,12 @@ const server = http.createServer(app);
 // Middleware
 const allowedOrigins = [
     'http://localhost:5173',
-    'https://delivery-management-system-steel.vercel.app',
-    'https://delivery-management-system-git-main-2232defs-projects.vercel.app'
+    'https://delivery-management-system-lukef6h69-2232defs-projects.vercel.app/'
 ];
 
 app.use(cors({
-    origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        
-        if (allowedOrigins.indexOf(origin) !== -1 || process.env.CLIENT_URL === origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
 }));
 app.use(express.json());
 app.use(cookieParser());
