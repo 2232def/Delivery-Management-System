@@ -2,6 +2,11 @@
 
 A full-stack web application for managing delivery orders with real-time tracking, role-based access control, and automated stage updates.
 
+## 🌐 Live Demo
+
+- **Frontend:** [https://delivery-management-system-git-main-2232defs-projects.vercel.app/](https://delivery-management-system-git-main-2232defs-projects.vercel.app/)
+- **Backend:** [https://dms-theta-opal.vercel.app/](https://dms-theta-opal.vercel.app/)
+
 ## 🚀 Features
 
 -   **Role-Based Access**: Distinct dashboards for **Buyers**, **Sellers**, and **Admins**.
@@ -93,3 +98,5 @@ To test the full application flow, follow these steps:
 
 5.  **Track Progress**:
     -   Switch back to the **Buyer** dashboard to see the progress bar update in real-time!
+
+
