@@ -1,24 +1,18 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router } from 'express';
 import {
     createOrder,
     getActiveOrder,
     getOrderHistory
 } from '../controllers/buyerController';
-import { enforceSignIn, attachLocalUser, verifyBuyer } from '../middleware/authMiddleware';
-
-type ExpressMiddleware = (req: Request, res: Response, next: NextFunction) => void;
+import { protect, authorize } from '../middleware/authMiddleware';
 
 const router = Router();
 
-const authChain: ExpressMiddleware[] = [
-    enforceSignIn as unknown as ExpressMiddleware,
-    attachLocalUser as ExpressMiddleware,
-    verifyBuyer as ExpressMiddleware
-];
+// Apply protection to all routes
+router.use(protect);
 
-// Core Buyer Routes
-router.post('/orders', authChain, createOrder);
-router.get('/orders/active', authChain, getActiveOrder);
-router.get('/orders/history', authChain, getOrderHistory);
+router.post('/orders', authorize('BUYER'), createOrder);
+router.get('/orders/active', authorize('BUYER'), getActiveOrder);
+router.get('/orders/history', authorize('BUYER'), getOrderHistory);
 
 export default router;

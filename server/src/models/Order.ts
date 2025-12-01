@@ -20,11 +20,9 @@ export interface IOrder extends Document {
     buyerId?: mongoose.Types.ObjectId;   
     sellerId?: mongoose.Types.ObjectId; 
     
-    // --- MISSING IN YOUR VERSION ---
     // Essential for Admin "Time taken between stages"
     stageTimestamps: Map<string, Date>; 
 
-    // --- UPDATED STRUCTURE ---
     // Detailed log for Admin "View Details"
     history: {
         stage: string;
@@ -35,7 +33,6 @@ export interface IOrder extends Document {
         timestamp: Date;
     }[];
 
-    // --- MISSING IN YOUR VERSION ---
     // Essential for "Soft Delete"
     isDeleted: boolean; 
     

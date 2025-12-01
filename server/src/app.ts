@@ -2,7 +2,7 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import http from "http";
 import dotenv from "dotenv";
 import cors from "cors";
-import { clerkMiddleware } from '@clerk/express';
+import cookieParser from "cookie-parser";
 
 // --- Imports from your Config files ---
 import connectDB from "./config/db"; 
@@ -13,7 +13,7 @@ import exampleRoutes from "./routes/exampleRoutes";
 import adminRoutes from "./routes/adminRoutes";
 import buyerRoutes from "./routes/buyerRoutes";
 import sellerRoutes from "./routes/sellerRoutes";
-import authRoutes from "./routes/authRoutes"; // Don't forget this one!
+import authRoutes from "./routes/authRoutes"; 
 
 // Load env vars
 dotenv.config();
@@ -26,27 +26,19 @@ const app: Application = express();
 const server = http.createServer(app);
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', // Adjust to your client URL
+    credentials: true
+}));
 app.use(express.json());
-
-// Clerk Global Middleware
-app.use(clerkMiddleware()); 
+app.use(cookieParser());
 
 // Register Routes
-app.use("/api/auth", authRoutes);      // For Syncing Users
-app.use("/api/v1", adminRoutes);       // Admin
-app.use("/api/v1", buyerRoutes);       // Buyer
-app.use("/api/v1", sellerRoutes);      // Seller
+app.use("/api/auth", authRoutes);      
+app.use("/api/v1", adminRoutes);       
+app.use("/api/v1", buyerRoutes);       
+app.use("/api/v1", sellerRoutes);      
 app.use("/api/example", exampleRoutes);
-
-// Global Error Handler (for Clerk)
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-    if (err.clerkError) {
-        console.error("Clerk Error:", err.message);
-        return res.status(401).json({ error: "Authentication Failed" });
-    }
-    next(err);
-});
 
 // --- CRITICAL FIX: Initialize Socket.io using your Config ---
 // This ensures that 'getIO()' inside your controllers works correctly.

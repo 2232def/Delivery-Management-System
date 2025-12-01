@@ -33,6 +33,7 @@ export const createOrder = async (req: Request, res: Response) => {
                 action: 'CREATED', 
                 actorId: buyerId, 
                 actorName: buyerName,
+                actorRole: req.currentUser.role,
                 timestamp: new Date() 
             }],
         });

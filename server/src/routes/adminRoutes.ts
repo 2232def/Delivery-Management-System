@@ -1,31 +1,26 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router } from 'express';
 import { 
     getAdminStats, 
     getAllOrders, 
     getBuyers, 
+    getSellers,
     associateBuyer, 
+    assignSeller,
     getOrderDetails 
 } from '../controllers/adminController';
-import { enforceSignIn, attachLocalUser, verifyAdmin } from '../middleware/authMiddleware';
-
-// Middleware to check if user is Admin (You should implement this)
-// import { verifyAdmin } from '../middleware/auth'; 
-
-type ExpressMiddleware = (req: Request, res: Response, next: NextFunction) => void;
+import { protect, authorize } from '../middleware/authMiddleware';
 
 const router = Router();
 
-const authChain: ExpressMiddleware[] = [
-    enforceSignIn as unknown as ExpressMiddleware,
-    attachLocalUser as ExpressMiddleware,
-    verifyAdmin as ExpressMiddleware
-];
-// Apply verifyAdmin middleware to all routes here in a real app
+// Apply protection to all routes
+router.use(protect);
 
-router.get('/admin/stats', authChain, getAdminStats);
-router.get('/admin/orders', authChain, getAllOrders);
-router.get('/admin/buyers', authChain, getBuyers);
-router.patch('/orders/:id/associate-buyer', authChain, associateBuyer);
-router.get('/orders/:id/details', authChain, getOrderDetails);
+router.get('/admin/stats', authorize('ADMIN'), getAdminStats);
+router.get('/admin/orders', authorize('ADMIN'), getAllOrders);
+router.get('/admin/buyers', authorize('ADMIN'), getBuyers);
+router.get('/admin/sellers', authorize('ADMIN'), getSellers);
+router.patch('/orders/:id/associate-buyer', authorize('ADMIN'), associateBuyer);
+router.patch('/orders/:id/assign-seller', authorize('ADMIN'), assignSeller);
+router.get('/orders/:id/details', authorize('ADMIN'), getOrderDetails);
 
 export default router;

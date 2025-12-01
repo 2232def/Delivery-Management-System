@@ -60,6 +60,16 @@ export const getBuyers = async (req: Request, res: Response) => {
     }
 };
 
+// GET /api/admin/sellers
+export const getSellers = async (req: Request, res: Response) => {
+    try {
+        const sellers = await User.find({ role: 'SELLER' }).select('name email _id');
+        res.json(sellers);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
 // PATCH /api/orders/:id/associate-buyer
 export const associateBuyer = async (req: Request, res: Response) => {
     try {
@@ -103,6 +113,43 @@ export const associateBuyer = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.error("Error associating buyer:", error);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
+// PATCH /api/orders/:id/assign-seller
+export const assignSeller = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { sellerId } = req.body;
+        const adminId = req.currentUser.id; 
+        const adminName = req.currentUser.name;
+
+        const order = await Order.findById(id);
+        if (!order) return res.status(404).json({ message: "Order not found" });
+
+        order.sellerId = sellerId;
+        
+        order.history.push({
+            stage: order.stage,
+            action: "SELLER_ASSIGNED",
+            actorId: adminId as any,
+            actorName: adminName,
+            actorRole: "ADMIN",
+            timestamp: new Date()
+        });
+
+        await order.save();
+
+        const io = getIO();
+        io.to('admin_room').emit('order_updated', order);
+        // Notify the seller if they are listening
+        // io.to(`seller_${sellerId}`).emit('new_assignment', order); 
+
+        res.json({ message: "Seller assigned successfully", order });
+
+    } catch (error) {
+        console.error("Error assigning seller:", error);
         res.status(500).json({ message: "Server Error" });
     }
 };

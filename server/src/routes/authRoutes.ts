@@ -1,15 +1,12 @@
-import { NextFunction, Request, Response, Router } from 'express';
-import { syncUser } from '../controllers/authController';
-import { enforceSignIn } from '../middleware/authMiddleware';
+import { Router } from 'express';
+import { register, login, logout, getMe } from '../controllers/authController';
+import { protect } from '../middleware/authMiddleware';
 
 const router = Router();
 
-type ExpressMiddleware = (req: Request, res: Response, next: NextFunction) => void;
-
-const authenticate: ExpressMiddleware[] = [
-    enforceSignIn as unknown as ExpressMiddleware
-];
-
-router.post('/auth/sync', authenticate, syncUser);
+router.post('/register', register);
+router.post('/login', login);
+router.get('/logout', logout);
+router.get('/me', protect, getMe);
 
 export default router;
