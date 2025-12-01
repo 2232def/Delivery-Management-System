@@ -27,8 +27,10 @@ const server = http.createServer(app);
 
 // Middleware
 app.use(cors({
-    origin: 'https://delivery-management-system-steel.vercel.app/', // Adjust to your client URL
-    credentials: true
+    origin: ['https://delivery-management-system-steel.vercel.app', 'http://localhost:5173'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(cookieParser());
