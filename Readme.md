@@ -99,4 +99,16 @@ To test the full application flow, follow these steps:
 5.  **Track Progress**:
     -   Switch back to the **Buyer** dashboard to see the progress bar update in real-time!
 
+---
+
+## ⚠️ Test Credentials
+
+If registration is not working or you want to test quickly, use these pre-configured accounts:
+
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** | `aa@example.com` | `11` |
+| **Seller** | `aa1@example.com` | `22` |
+| **Buyer** | `Alena@example.com` | `word` |
+
 
