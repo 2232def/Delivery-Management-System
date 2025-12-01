@@ -27,7 +27,7 @@ const server = http.createServer(app);
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:5173', // Adjust to your client URL
+    origin: 'https://delivery-management-system-steel.vercel.app/login', // Adjust to your client URL
     credentials: true
 }));
 app.use(express.json());
@@ -44,7 +44,7 @@ app.use("/api/example", exampleRoutes);
 // This ensures that 'getIO()' inside your controllers works correctly.
 initSocket(server); 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 
 server.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
