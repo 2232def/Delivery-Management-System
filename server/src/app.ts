@@ -1,10 +1,11 @@
-import express, { Application } from 'express';
-import http from 'http';
-import { Server } from 'socket.io';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import connectDB from './config/db';
-import exampleRoutes from './routes/exampleRoutes';
+import express, { Application } from "express";
+import http from "http";
+import { Server } from "socket.io";
+import dotenv from "dotenv";
+import cors from "cors";
+import connectDB from "./config/db";
+import exampleRoutes from "./routes/exampleRoutes";
+import adminRoutes from "./routes/adminRoutes";
 
 // Load env vars
 dotenv.config();
@@ -20,21 +21,22 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use('/api/example', exampleRoutes);
+app.use("/api/example", exampleRoutes);
+app.use("/api/v1", adminRoutes);
 
 // Socket.io setup
 const io = new Server(server, {
   cors: {
-    origin: '*', // Allow all origins for now, configure for production
-    methods: ['GET', 'POST']
-  }
+    origin: "*", // Allow all origins for now, configure for production
+    methods: ["GET", "POST"],
+  },
 });
 
-io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
+io.on("connection", (socket) => {
+  console.log("A user connected:", socket.id);
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
   });
 });
 

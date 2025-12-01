@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.io Test Client</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+        .log-entry { margin-top: 4px; padding: 4px; border-radius: 4px; }
+        .success { background-color: #d1fae5; color: #065f46; }
+        .info { background-color: #dbeafe; color: #1e40af; }
+    </style>
+</head>
+<body class="p-8 bg-gray-50 min-h-screen font-sans">
+
+    <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-xl">
+        <h1 class="text-2xl font-bold mb-4">Socket.io Test Client</h1>
+        
+        <div class="space-y-4 mb-6">
+            <button id="connectBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 shadow-md">
+                Connect to Server
+            </button>
+            <button id="emitBtn" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 shadow-md" disabled>
+                Trigger Server Emit (via API)
+            </button>
+        </div>
+
+        <h2 class="text-xl font-semibold mb-2 text-gray-700">Client Log</h2>
+        <div id="log" class="bg-gray-100 p-3 rounded-lg border border-gray-200 h-64 overflow-y-scroll text-sm">
+            <!-- Log entries will appear here -->
+        </div>
+    </div>
+
+    <script>
+        const logContainer = document.getElementById('log');
+        const connectBtn = document.getElementById('connectBtn');
+        const emitBtn = document.getElementById('emitBtn');
+        let socket;
+        
+        // --- Logging Helper ---
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `${new Date().toLocaleTimeString()} [${type.toUpperCase()}]: ${message}`;
+            logContainer.prepend(entry); // Add newest to top
+        }
+
+        // --- Socket Logic ---
+        connectBtn.onclick = () => {
+            log('Attempting to connect...');
+            // Connect to the same origin where the server is running
+            socket = io('http://localhost:3000'); 
+
+            socket.on('connect', () => {
+                log(`Successfully connected. Socket ID: ${socket.id}`, 'success');
+                connectBtn.disabled = true;
+                emitBtn.disabled = false;
+                
+                // CRUCIAL TEST: Send the 'join_room' event as required by config/socket.ts
+                // Simulating an Admin user joining their specific room
+                socket.emit('join_room', 'admin_room'); 
+                log('Emitted: join_room (admin_room)');
+            });
+
+            socket.on('disconnect', () => {
+                log('Disconnected from server.', 'info');
+                connectBtn.disabled = false;
+                emitBtn.disabled = true;
+            });
+            
+            // CRUCIAL TEST: Listen for the push message from the server
+            socket.on('test_message', (data) => {
+                log(`RECEIVED REAL-TIME PUSH: ${data.data}`, 'success');
+            });
+            
+            socket.on('connect_error', (error) => {
+                log(`Connection Error: ${error.message}`, 'error');
+            });
+        };
+        
+        // --- API Emit Trigger ---
+        emitBtn.onclick = async () => {
+            log('Sending API call to trigger server emit...');
+            try {
+                const response = await fetch('http://localhost:3000/api/test-emit');
+                const result = await response.json();
+                if (response.ok) {
+                    log(`API Success: ${result.message}`, 'info');
+                } else {
+                    log(`API Failed: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                log(`Fetch Error: ${error.message}`, 'error');
+            }
+        };
+
+        log('Click "Connect to Server" to begin testing.');
+    </script>
+</body>
+</html>
