@@ -5,7 +5,7 @@ A full-stack web application for managing delivery orders with real-time trackin
 ## 🌐 Live Demo
 
 - **Frontend:** [https://delivery-management-system-git-main-2232defs-projects.vercel.app/](https://delivery-management-system-git-main-2232defs-projects.vercel.app/)
-- **Backend:** [https://dms-theta-opal.vercel.app/](https://dms-theta-opal.vercel.app/)
+- **Backend:** [https://dms-backend-3h2p.onrender.com](https://dms-backend-3h2p.onrender.com)
 
 ## 🚀 Features
 
