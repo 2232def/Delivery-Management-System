@@ -17,8 +17,8 @@ const authChain: ExpressMiddleware[] = [
 ];
 
 // Core Buyer Routes
-router.post('/orders', createOrder);
-router.get('/orders/active', getActiveOrder);
-router.get('/orders/history', getOrderHistory);
+router.post('/orders', authChain, createOrder);
+router.get('/orders/active', authChain, getActiveOrder);
+router.get('/orders/history', authChain, getOrderHistory);
 
 export default router;

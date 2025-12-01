@@ -1,8 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-// -----------------------------------------------------------------------------
-// CONSTANTS
-// -----------------------------------------------------------------------------
 export const ORDER_STAGES = [
     'Order Placed',
     'Buyer Associated',
@@ -57,14 +54,14 @@ const OrderSchema: Schema = new Schema({
     buyerId: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     sellerId: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     
-    // FIX 1: Add stageTimestamps
+    //Add stageTimestamps
     stageTimestamps: {
         type: Map,
         of: Date,
         default: {}
     },
 
-    // FIX 2: Update History to store full actor details
+    //Add history to store full actor details
     history: [{
         stage: { type: String, required: true },
         action: { type: String, required: true },
@@ -74,7 +71,7 @@ const OrderSchema: Schema = new Schema({
         timestamp: { type: Date, default: Date.now }
     }],
 
-    // FIX 3: Add isDeleted flag
+    //Add isDeleted flag
     isDeleted: {
         type: Boolean,
         default: false

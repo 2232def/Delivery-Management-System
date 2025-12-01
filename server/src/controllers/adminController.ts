@@ -3,6 +3,7 @@ import Order from '../models/Order';
 import User from '../models/User';
 import { getIO } from '../config/socketConfig';
 
+// GET /api/admin/stats
 export const getAdminStats = async (req: Request, res: Response) => {
     try {
         const totalOrders = await Order.countDocuments();
@@ -64,6 +65,9 @@ export const associateBuyer = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const { buyerId } = req.body;
+        // Get Admin details from the middleware (req.currentUser)
+        const adminId = req.currentUser.id; 
+        const adminName = req.currentUser.name;
 
         const order = await Order.findById(id);
         if (!order) return res.status(404).json({ message: "Order not found" });
@@ -72,11 +76,14 @@ export const associateBuyer = async (req: Request, res: Response) => {
         order.buyerId = buyerId;
         order.stage = "Buyer Associated";
         
-        // Add to history log
+        // Add to history log (UPDATED TO MATCH NEW SCHEMA)
         order.history.push({
             stage: "Buyer Associated",
-            timestamp: new Date(),
-            actor: "Admin"
+            action: "ASSOCIATED", // Matches 'action' in schema
+            actorId: adminId as any, // Matches 'actorId' in schema
+            actorName: adminName,    // Matches 'actorName' in schema
+            actorRole: "ADMIN",      // Matches 'actorRole' in schema
+            timestamp: new Date()
         });
 
         await order.save();
@@ -95,6 +102,7 @@ export const associateBuyer = async (req: Request, res: Response) => {
         res.json({ message: "Buyer associated successfully", order });
 
     } catch (error) {
+        console.error("Error associating buyer:", error);
         res.status(500).json({ message: "Server Error" });
     }
 };
