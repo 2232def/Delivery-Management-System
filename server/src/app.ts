@@ -27,27 +27,33 @@ const server = http.createServer(app);
 
 // Middleware
 const allowedOrigins = [
-    "http://localhost:5173",
-    "https://delivery-management-system-steel.vercel.app",
-    "https://delivery-management-system-git-main-2232defs-projects.vercel.app",
+    "http://localhost:5173"
 ];
 
 app.use(
     cors({
-        origin: (origin, callback) => {
-            // Allow requests with no origin (like mobile apps or curl requests)
-            if (!origin) return callback(null, true);
+    origin: (origin, callback) => {
+        // 1. Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
 
-            if (allowedOrigins.indexOf(origin) === -1) {
-                const msg =
-                    "The CORS policy for this site does not allow access from the specified Origin.";
-                return callback(new Error(msg), false);
-            }
+        // 2. Check if the origin is in the explicit allowed list (like localhost)
+        if (allowedOrigins.indexOf(origin) !== -1) {
             return callback(null, true);
-        },
-        credentials: true, // <--- CRITICAL for cookies
-        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+        }
+
+        // 3. DYNAMIC CHECK: Allow any Vercel deployment
+        if (origin.endsWith('.vercel.app')) {
+            return callback(null, true);
+        }
+
+        // 4. If nothing matches, block it and LOG IT so we know why
+        console.log("❌ BLOCKED ORIGIN:", origin); 
+        const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+        return callback(new Error(msg), false);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
     })
 );
 app.use(express.json());
