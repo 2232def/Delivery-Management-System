@@ -28,10 +28,8 @@ const server = http.createServer(app);
 // Middleware
 const allowedOrigins = [
     "http://localhost:5173",
-    "http://localhost:8000",
     "https://delivery-management-system-steel.vercel.app",
     "https://delivery-management-system-git-main-2232defs-projects.vercel.app",
-    "https://dms-theta-opal.vercel.app", // Add backend itself just in case
 ];
 
 app.use(
@@ -66,7 +64,7 @@ app.use("/api/example", exampleRoutes);
 // This ensures that 'getIO()' inside your controllers works correctly.
 initSocket(server);
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
