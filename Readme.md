@@ -9,26 +9,27 @@ A full-stack web application for managing delivery orders with real-time trackin
 
 ## 🚀 Features
 
--   **Role-Based Access**: Distinct dashboards for **Buyers**, **Sellers**, and **Admins**.
--   **Real-Time Updates**: Instant status changes and notifications using **Socket.io**.
--   **Order Management**: Full lifecycle tracking from "Order Placed" to "Delivered".
--   **Secure Authentication**: Custom JWT authentication with HTTP-Only cookies.
--   **Admin Analytics**: View system statistics, active orders, and assign users.
+- **Role-Based Access**: Distinct dashboards for **Buyers**, **Sellers**, and **Admins**.
+- **Real-Time Updates**: Instant status changes and notifications using **Socket.io**.
+- **Order Management**: Full lifecycle tracking from "Order Placed" to "Delivered".
+- **Secure Authentication**: Custom JWT authentication with HTTP-Only cookies.
+- **Admin Analytics**: View system statistics, active orders, and assign users.
 
 ## 🛠️ Tech Stack
 
--   **Frontend**: React (Vite), TypeScript, Tailwind CSS
--   **Backend**: Node.js, Express, TypeScript
--   **Database**: MongoDB (Mongoose)
--   **Real-Time**: Socket.io
+- **Frontend**: React (Vite), TypeScript, Tailwind CSS
+- **Backend**: Node.js, Express, TypeScript
+- **Database**: MongoDB (Mongoose)
+- **Real-Time**: Socket.io
 
 ---
 
 ## ⚙️ Installation & Setup
 
 ### 1. Prerequisites
--   Node.js (v16+)
--   MongoDB (Atlas URI)
+
+- Node.js (v16+)
+- MongoDB (Atlas URI)
 
 ### 2. Server Setup (Backend)
 
@@ -42,8 +43,8 @@ A full-stack web application for managing delivery orders with real-time trackin
     ```
 3.  Create a `.env` file in the `server` folder:
     ```env
-    PORT=5000
-    MONGO_URI=your_mongodb_connection_string
+    PORT=8000
+    MONGO_URI=mongodb+srv://dev07:gohikumarsingh@cluster0.rsmkamu.mongodb.net/?appName=Cluster0
     JWT_SECRET=your_secret_key
     NODE_ENV=development
     ```
@@ -51,7 +52,7 @@ A full-stack web application for managing delivery orders with real-time trackin
     ```bash
     npm run dev
     ```
-    *Server runs on http://localhost:8000*
+    _Server runs on http://localhost:8000_
 
 ### 3. Client Setup (Frontend)
 
@@ -67,7 +68,7 @@ A full-stack web application for managing delivery orders with real-time trackin
     ```bash
     npm run dev
     ```
-    *Client runs on http://localhost:5173*
+    _Client runs on http://localhost:5173_
 
 ---
 
@@ -76,28 +77,32 @@ A full-stack web application for managing delivery orders with real-time trackin
 To test the full application flow, follow these steps:
 
 1.  **Register Users**:
-    -   Go to `/register` and create three separate accounts with different roles:
-        -   **Buyer** (e.g., `buyer@test.com`)
-        -   **Seller** (e.g., `seller@test.com`)
-        -   **Admin** (e.g., `admin@test.com`)
+
+    - Go to `/register` and create three separate accounts with different roles:
+      - **Buyer** (e.g., `buyer@test.com`)
+      - **Seller** (e.g., `seller@test.com`)
+      - **Admin** (e.g., `admin@test.com`)
 
 2.  **Create an Order (Buyer)**:
-    -   Login as **Buyer**.
-    -   Click "Create New Order", add items, and submit.
-    -   You will see the order status as "Order Placed".
+
+    - Login as **Buyer**.
+    - Click "Create New Order", add items, and submit.
+    - You will see the order status as "Order Placed".
 
 3.  **Assign Seller (Admin)**:
-    -   Login as **Admin**.
-    -   Find the new order in the list.
-    -   Click "Assign Seller" and select the Seller account you created.
+
+    - Login as **Admin**.
+    - Find the new order in the list.
+    - Click "Assign Seller" and select the Seller account you created.
 
 4.  **Process Order (Seller)**:
-    -   Login as **Seller**.
-    -   You will see the assigned order.
-    -   Click "Next Stage" to move the order through stages (Processing -> Packed -> Shipped -> etc.).
+
+    - Login as **Seller**.
+    - You will see the assigned order.
+    - Click "Next Stage" to move the order through stages (Processing -> Packed -> Shipped -> etc.).
 
 5.  **Track Progress**:
-    -   Switch back to the **Buyer** dashboard to see the progress bar update in real-time!
+    - Switch back to the **Buyer** dashboard to see the progress bar update in real-time!
 
 ---
 
@@ -105,10 +110,8 @@ To test the full application flow, follow these steps:
 
 If registration is not working or you want to test quickly, use these pre-configured accounts:
 
-| Role | Email | Password |
-|------|-------|----------|
-| **Admin** | `aa@example.com` | `11` |
-| **Seller** | `aa1@example.com` | `22` |
-| **Buyer** | `Alena@example.com` | `word` |
-
-
+| Role       | Email               | Password |
+| ---------- | ------------------- | -------- |
+| **Admin**  | `aa@example.com`    | `11`     |
+| **Seller** | `aa1@example.com`   | `22`     |
+| **Buyer**  | `Alena@example.com` | `word`   |
