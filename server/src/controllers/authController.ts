@@ -15,6 +15,7 @@ const sendTokenResponse = (user: any, statusCode: number, res: Response) => {
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' as const : 'lax' as const // browser was blocking cookies in some cases
   };
 
   res.status(statusCode)
